@@ -5,10 +5,15 @@
 #ifndef ROBOT_SERVER_H
 #define ROBOT_SERVER_H
 
+#include <memory>
+#include "EpollDispatcher.h"
 
-class Server {
+using namespace std;
+
+class Server{
 public:
-    Server(){
+    Server():
+    m_dispatch(make_unique<EpollDispatcher>()){
 
     }
     ~Server(){
@@ -17,9 +22,9 @@ public:
     void listenServer();
     //主循环
     void runServer();
-    void acceptServer();
 public:
     int m_lifd;
+    unique_ptr<Distpacher> m_dispatch;
 };
 
 

@@ -8,6 +8,7 @@
 #include <strings.h>
 #include "Server.h"
 #include "EventFactory.h"
+#include "ServerObj.h"
 #include <arpa/inet.h>
 #include <zconf.h>
 
@@ -33,27 +34,19 @@ void Server::listenServer() {
         std::cout<<"listen error "<<errno<<std::endl;
     }
     std::cout<<"server listen start"<<std::endl;
-//    auto event = EventFactory::create()->createEvent(EventType::READ_EVENT)
-
+    auto sobj = make_unique<ServerObj>();
+    auto event = EventFactory::create()->createEvent(EventType::READ_EVENT,this->m_lifd,std::move(sobj), nullptr);
+    m_dispatch->addEvent(std::move(event));
 }
 
-void Server::acceptServer() {
-    struct sockaddr addr;
-    socklen_t len;
-    auto fd = accept(this->m_lifd,&addr,&len);
-    if ( fd < -1 ){
-        std::cout<<"accept error "<<errno<<std::endl;
-        return;
-    }
 
-}
 
 
 void Server::runServer() {
+    this->m_dispatch->initDispatch();
     this->listenServer();
     while (true){
-
-        sleep(1000);
+        m_dispatch->disPatch();
     }
 }
 

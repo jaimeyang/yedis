@@ -5,8 +5,24 @@
 #ifndef ROBOT_OBJECT_H
 #define ROBOT_OBJECT_H
 
+#include <string_view>
+#include <memory>
 
+using namespace std;
+//todo 考虑使用模板类
 class Object {
+public:
+    Object() {
+
+    }
+
+    ~Object(){
+
+    }
+    virtual void readEventCb(int fd,unique_ptr<Object> obj) = 0;
+    virtual void writeEventCb(int fd,unique_ptr<Object> obj) = 0;
+    virtual void exceptEventCb(int fd,unique_ptr<Object> obj) = 0;
+private:
 
 };
 

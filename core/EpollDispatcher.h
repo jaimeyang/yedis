@@ -15,6 +15,8 @@ public:
 
 private:
     int m_epoll_fd;
+    struct epoll_event* events;
+    unordered_map<int,unique_ptr<Event>> m_event_map;
 };
 
 

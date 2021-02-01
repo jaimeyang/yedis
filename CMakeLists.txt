@@ -9,8 +9,9 @@ set(SOURCE_FILES ${DIR_JSON_SRCS}
         core/EventFactory.cpp
         core/Event.cpp
         core/Server.cpp
+        core/ServerObj.cpp
         core/EpollDispatcher.cpp
-        main.cpp)
+        main.cpp core/Worker.cpp core/Worker.h)
 
 add_executable(robot ${SOURCE_FILES})
 

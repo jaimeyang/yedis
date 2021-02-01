@@ -7,10 +7,11 @@
 #include <sys/epoll.h>
 #include <memory>
 #include <iostream>
+#include "Object.h"
+#include <unordered_map>
 
 using namespace std;
 
-using EventCallback = void (*)(int fd);
 
 enum EventType{
     READ_EVENT = 0,
@@ -20,8 +21,8 @@ enum EventType{
 
 class Event {
 public:
-    Event(EventType type,int fd,EventCallback cb,void* data):
-    m_type(type),m_fd(fd),m_callback(cb),m_data(data)
+    Event(EventType type,int fd,unique_ptr<Object> obj,unique_ptr<Object> data):
+    m_type(type),m_fd(fd),m_obj(std::move(obj)),m_data(std::move(data))
     {
 
     }
@@ -35,18 +36,30 @@ public:
     }
 
     auto getEpollEvent(){
-        auto event = make_unique<epoll_event>();
-        event->events = EPOLLIN || EPOLLOUT || EPOLLHUP;
-        event->data.ptr = this->m_data;
-        return std::move(event);
+        epoll_event event;
+        event.events = EPOLLIN | EPOLLOUT | EPOLLHUP;
+        event.data.fd = this->m_fd;
+        return event;
+    }
+
+    void readCb(){
+        m_obj.get()->readEventCb(this->m_fd,std::move(this->m_data));
+    }
+
+    void writeCb(){
+        m_obj.get()->writeEventCb(this->m_fd,std::move(this->m_data));
+    }
+
+    void exceCb(){
+        m_obj.get()->exceptEventCb(this->m_fd,std::move(this->m_data));
     }
 public:
 
 private:
     int m_fd = -1;
-    EventCallback m_callback = nullptr;
     EventType m_type = EventType::READ_EVENT;
-    void* m_data = nullptr;
+    unique_ptr<Object> m_obj;
+    unique_ptr<Object> m_data;
 };
 
 

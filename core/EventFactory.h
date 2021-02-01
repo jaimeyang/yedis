@@ -29,7 +29,7 @@ public:
         }
         return m_factory;
     }
-    unique_ptr<Event> createEvent(EventType type,int fd,EventCallback cb,void* data);
+    unique_ptr<Event> createEvent(EventType type,int fd,unique_ptr<Object> obj,unique_ptr<Object> data);
 private:
     static EventFactory* m_factory;
 };
