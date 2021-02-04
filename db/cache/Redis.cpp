@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <cstring>
 #include "Redis.h"
 
 void Redis::connect(unique_ptr<std::string_view> addr,int port){
@@ -11,13 +12,22 @@ void Redis::connect(unique_ptr<std::string_view> addr,int port){
         std::cout<<"connect redis error "<<this->m_context->errstr<<std::endl;
         return;
     }
+    std::cout<<"connect scuess"<<std::endl;
 }
-
-void Redis::execCommand(unique_ptr<string_view> command){
-    auto reply = (redisReply*)redisCommand(this->m_context,command->data());
-    if ( reply != nullptr ) {
-        std::cout<<"reply str is "<<reply->str<<std::endl;
+//todo 为什么不能用string_view
+unique_ptr<string> Redis::execCommand(const string_view& command){
+    auto reply = (redisReply*)redisCommand(this->m_context,command.data());
+    if ( reply->elements > 0 ) {
+        printf("replay str is %s\n",reply->str);
+        auto ret = make_unique<string>("");
+        for (int i = 0; i < reply->elements; ++i) {
+            auto ele = reply->element[i];
+            auto test = string(ele->str);
+            ret->append(ele->str);
+            ret->append("\n");
+        }
         freeReplyObject(reply);
+        return std::move(ret);
     }
-    std::cout<<"execcommand reply is empty"<<std::endl;
+    return nullptr;
 }

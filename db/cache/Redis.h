@@ -8,6 +8,7 @@
 #include <hiredis/hiredis.h>
 #include <string_view>
 #include <memory>
+#include <vector>
 
 
 using namespace std;
@@ -23,7 +24,7 @@ public:
 
 public:
     void connect(unique_ptr<std::string_view> addr,int port);
-    void execCommand(unique_ptr<string_view> command);
+    unique_ptr<string> execCommand(const string_view& command);
 public:
     redisContext* m_context = nullptr;
 };

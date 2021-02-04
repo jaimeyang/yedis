@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(core)
 include_directories(core/base)
+include_directories(db/cache)
 
 
 set(SOURCE_FILES ${DIR_JSON_SRCS}
@@ -24,7 +25,8 @@ set(SOURCE_FILES ${DIR_JSON_SRCS}
         core/WorkerObject.cpp
         core/WorkerObject.h
         core/base/Interger.cpp
-        core/base/Interger.h TcpEventObj.h)
+        core/base/Interger.h
+        core/TcpEventObj.h)
 
 add_executable(yedis ${SOURCE_FILES})
 

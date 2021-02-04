@@ -7,12 +7,15 @@
 
 #include "TcpEventObj.h"
 #include "EpollDispatcher.h"
+#include "Redis.h"
 
 class WorkerObject : public TcpEventObj {
 public:
     WorkerObject(shared_ptr<Distpacher> dispatcher):
     m_dispatcher(dispatcher){
-
+        m_redis = std::make_unique<Redis>();
+        auto addr = std::make_unique<string_view>("119.3.111.72");
+        m_redis->connect(std::move(addr),6379);
     }
     ~WorkerObject(){
 
@@ -24,6 +27,8 @@ public:
 
 private:
     shared_ptr<Distpacher> m_dispatcher;
+    //todo 后面实现redis的连接池
+    unique_ptr<Redis> m_redis;
 };
 
 

@@ -20,7 +20,16 @@ void WorkerObject::readEventCb(int fd, unique_ptr<Object> obj) {
         //todo 正确的关闭方式
     }else{
         if ( obj == nullptr ){
-            cout<<"data is "<<data<<endl;
+            printf("data is %s\n",data);
+            const string_view str(data);
+            auto result = m_redis->execCommand(str);
+            //写回给客户端
+            //todo 一次写可能写不完，以后要加上buffer去处理，包括粘包和半包的问题
+            if ( result != nullptr ){
+                auto len = result.get()->length();
+                int ret = send(fd,result->data(),len,0);
+            }
+
             return;
         }
     }
