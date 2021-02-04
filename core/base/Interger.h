@@ -1,7 +1,7 @@
 //
 // Created by jaime on 2021/2/4.
 //
-
+//对整形的封装，后续添加编码的支持，为了高效率和节省空间的目的
 #ifndef YEDIS_INTERGER_H
 #define YEDIS_INTERGER_H
 

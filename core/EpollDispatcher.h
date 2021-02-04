@@ -1,6 +1,6 @@
 //
 // Created by jaime on 2021/1/29.
-//
+//epoll事件分发器的实现
 
 #ifndef ROBOT_EPOLLDISPATCHER_H
 #define ROBOT_EPOLLDISPATCHER_H

@@ -1,6 +1,6 @@
 //
 // Created by jaime on 2021/1/30.
-//
+//工作的子线程，负责读写
 
 #ifndef ROBOT_WORKER_H
 #define ROBOT_WORKER_H

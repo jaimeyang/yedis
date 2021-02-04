@@ -8,7 +8,7 @@
 #include <sys/socket.h>
 
 WorkerPool* WorkerPool::m_instance = nullptr;
-
+//创建socketpair
 unique_ptr<array<int,2>> WorkerPool::createSocketPair() {
     int fds[2] = {};
     int result = socketpair(AF_LOCAL,SOCK_STREAM,0,fds);
@@ -35,7 +35,7 @@ void WorkerPool::createWorker() {
     pthread_create(&t, nullptr,run,&fd);
     pthread_detach(t);
 }
-
+//todo 后续实现子线程挑选算法，一致性HASH，普通HASH，随机，顺序，子线程状态
 void WorkerPool::notiyEventAdd(int newfd) {
     int fd = this->m_sps[0];
     const char* data = to_string(newfd).c_str();

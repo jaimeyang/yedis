@@ -23,6 +23,7 @@ void ServerObj::writeEventCb(int fd, unique_ptr<Object> obj) {
 }
 
 void ServerObj::readEventCb(int fd, unique_ptr<Object> obj) {
+    //主线程可读了，表示有新连接已经完成了，可以进行读写了
     this->acceptServer(fd);
 }
 

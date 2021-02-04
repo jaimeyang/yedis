@@ -11,10 +11,7 @@
 #include "ServerObj.h"
 #include <arpa/inet.h>
 #include "pool/WorkerPool.h"
-
-
-
-
+//主线程监听
 void Server::listenServer() {
     this->m_lifd = socket(AF_INET,SOCK_STREAM,0);
     if (this->m_lifd < 0){
@@ -44,7 +41,7 @@ void Server::listenServer() {
     auto event = EventFactory::create()->createEvent(EventType::READ_EVENT,this->m_lifd,std::move(sobj), nullptr);
     m_dispatch->addEvent(std::move(event));
 }
-
+//主线程主循环
 void Server::runServer() {
     this->m_dispatch->initDispatch();
     this->listenServer();

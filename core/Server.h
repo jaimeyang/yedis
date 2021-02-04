@@ -1,6 +1,6 @@
 //
 // Created by jaime on 2021/1/28.
-//
+//主线程的实现，负责接受新连接，已经通过socketpair把需要读写的文件描述符传递给子线程
 
 #ifndef ROBOT_SERVER_H
 #define ROBOT_SERVER_H

@@ -1,6 +1,6 @@
 //
 // Created by jaime on 2021/2/4.
-//
+//读写事件回调
 
 #ifndef YEDIS_WORKEROBJECT_H
 #define YEDIS_WORKEROBJECT_H

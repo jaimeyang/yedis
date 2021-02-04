@@ -1,6 +1,6 @@
 //
 // Created by jaime on 2021/1/29.
-//
+//事件分发器的抽象，后续可能添加select,kqueue的支持
 
 #ifndef ROBOT_DISTPACHER_H
 #define ROBOT_DISTPACHER_H

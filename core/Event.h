@@ -1,6 +1,6 @@
 //
 // Created by jaime on 2021/1/28.
-//
+//抽象的事件接口，整个框架是事件驱动的框架
 
 #ifndef ROBOT_EVENT_H
 #define ROBOT_EVENT_H

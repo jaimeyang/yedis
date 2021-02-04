@@ -19,6 +19,7 @@ void WorkerObject::readEventCb(int fd, unique_ptr<Object> obj) {
     if (ret == 0){
         //todo 正确的关闭方式
     }else{
+        //obj为空，表示是正常的读写
         if ( obj == nullptr ){
             printf("data is %s\n",data);
             const string_view str(data);
@@ -33,10 +34,10 @@ void WorkerObject::readEventCb(int fd, unique_ptr<Object> obj) {
             return;
         }
     }
-
     //主线程发送过来的,需要加入到子线程监听
     auto cobj = unique_ptr<WorkerObject>(this);
     auto rfd = atoi(data);
+    //添加读事件
     auto event = EventFactory::create()->createEvent(EventType::READ_EVENT,rfd,std::move(cobj), nullptr);
     this->m_dispatcher->addEvent(std::move(event));
 
