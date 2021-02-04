@@ -1,2 +1,3 @@
 # yedis
-连接redis的HTTP server
+reactor模式的网络框架，在这个框架基础上实现redis中间件，以及后续添加mysql,mongodb,以及其他的中间件支持，主要使用
+的协议TCP。主干用redis实现基础，后续会根据不同的中间件开分支，并作出一些中间件层面的抽象。
