@@ -35,6 +35,7 @@ void EpollDispatcher::disPatch() {
         //关闭
         if ( (ep_event.events & EPOLLHUP) || (ep_event.events & EPOLLERR)){
             std::cout<<"new error"<<std::endl;
+            event->exceCb();
         }
         this->m_event_map[ep_event.data.fd] = std::move(event);
     }

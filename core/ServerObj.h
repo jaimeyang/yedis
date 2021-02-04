@@ -6,9 +6,9 @@
 #define ROBOT_SERVEROBJ_H
 
 
-#include "Object.h"
+#include "TcpEventObj.h"
 
-class ServerObj: public Object  {
+class ServerObj: public TcpEventObj {
 public:
     void writeEventCb(int fd, unique_ptr<Object> obj) override;
     void readEventCb(int fd, unique_ptr<Object> obj) override;

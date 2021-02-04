@@ -19,9 +19,6 @@ public:
     ~Object(){
 
     }
-    virtual void readEventCb(int fd,unique_ptr<Object> obj) = 0;
-    virtual void writeEventCb(int fd,unique_ptr<Object> obj) = 0;
-    virtual void exceptEventCb(int fd,unique_ptr<Object> obj) = 0;
 private:
 
 };

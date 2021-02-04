@@ -29,7 +29,7 @@ public:
         }
         return m_factory;
     }
-    unique_ptr<Event> createEvent(EventType type,int fd,unique_ptr<Object> obj,unique_ptr<Object> data);
+    unique_ptr<Event> createEvent(EventType type,int fd,unique_ptr<TcpEventObj> obj,unique_ptr<Object> data);
 private:
     static EventFactory* m_factory;
 };

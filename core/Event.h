@@ -7,7 +7,7 @@
 #include <sys/epoll.h>
 #include <memory>
 #include <iostream>
-#include "Object.h"
+#include "TcpEventObj.h"
 #include <unordered_map>
 
 using namespace std;
@@ -21,7 +21,7 @@ enum EventType{
 
 class Event {
 public:
-    Event(EventType type,int fd,unique_ptr<Object> obj,unique_ptr<Object> data):
+    Event(EventType type,int fd,unique_ptr<TcpEventObj> obj,unique_ptr<Object> data):
     m_type(type),m_fd(fd),m_obj(std::move(obj)),m_data(std::move(data))
     {
 
@@ -37,7 +37,7 @@ public:
 
     auto getEpollEvent(){
         epoll_event event;
-        event.events = EPOLLIN | EPOLLOUT | EPOLLHUP;
+        event.events = EPOLLIN | EPOLLOUT | EPOLLHUP | EPOLLET;
         event.data.fd = this->m_fd;
         return event;
     }
@@ -58,7 +58,7 @@ public:
 private:
     int m_fd = -1;
     EventType m_type = EventType::READ_EVENT;
-    unique_ptr<Object> m_obj;
+    unique_ptr<TcpEventObj> m_obj;
     unique_ptr<Object> m_data;
 };
 

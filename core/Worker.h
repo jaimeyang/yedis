@@ -10,9 +10,10 @@
 
 using namespace std;
 
-class Worker : public Object {
+class Worker{
 public:
-    Worker(){
+    Worker(int fd):
+    m_fd(fd){
 
     }
     ~Worker(){
@@ -22,7 +23,8 @@ public:
     void run();
 
 private:
-    unique_ptr<Distpacher> m_distpacher;
+    shared_ptr<Distpacher> m_distpacher;
+    int m_fd;
 };
 
 

@@ -10,7 +10,10 @@
 #include "EventFactory.h"
 #include "ServerObj.h"
 #include <arpa/inet.h>
-#include <zconf.h>
+#include "pool/WorkerPool.h"
+
+
+
 
 void Server::listenServer() {
     this->m_lifd = socket(AF_INET,SOCK_STREAM,0);
@@ -24,12 +27,15 @@ void Server::listenServer() {
     addr.sin_family = AF_INET;
     addr.sin_port = htons(9000);
     addr.sin_addr.s_addr =  inet_addr("0.0.0.0");
+
+    int reuse = 1;
+    setsockopt(this->m_lifd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(int));
+
     if ( bind(this->m_lifd,(struct sockaddr*)&addr,sizeof(addr)) < 0 ){
         std::cout<<"bind error "<<errno<<std::endl;
         return;
     }
-    int reuse = 1;
-    setsockopt(this->m_lifd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(int));
+
     if ( listen(this->m_lifd,65553) < 0 ){
         std::cout<<"listen error "<<errno<<std::endl;
     }
@@ -39,12 +45,10 @@ void Server::listenServer() {
     m_dispatch->addEvent(std::move(event));
 }
 
-
-
-
 void Server::runServer() {
     this->m_dispatch->initDispatch();
     this->listenServer();
+    WorkerPool::getInsance()->createWorker();
     while (true){
         m_dispatch->disPatch();
     }
