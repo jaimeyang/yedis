@@ -11,7 +11,7 @@ WorkerPool* WorkerPool::m_instance = nullptr;
 //创建socketpair
 unique_ptr<array<int,2>> WorkerPool::createSocketPair() {
     int fds[2] = {};
-    int result = socketpair(AF_LOCAL,SOCK_STREAM,0,fds);
+    int result = socketpair(AF_LOCAL,SOCK_STREAM, 0,fds);
     if ( result < 0 ){
         std::cout<<"socket pair is "<<errno<<std::endl;
         return nullptr;

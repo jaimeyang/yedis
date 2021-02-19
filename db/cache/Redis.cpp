@@ -18,16 +18,22 @@ void Redis::connect(unique_ptr<std::string_view> addr,int port){
 unique_ptr<string> Redis::execCommand(const string_view& command){
     auto reply = (redisReply*)redisCommand(this->m_context,command.data());
     if ( reply->elements > 0 ) {
-        printf("replay str is %s\n",reply->str);
         auto ret = make_unique<string>("");
         for (int i = 0; i < reply->elements; ++i) {
             auto ele = reply->element[i];
-            auto test = string(ele->str);
-            ret->append(ele->str);
-            ret->append("\n");
+            if ( ele->str != nullptr ){
+                ret->append(ele->str);
+                ret->append("\n");
+            }
         }
         freeReplyObject(reply);
         return std::move(ret);
+    }
+    if ( reply->str != nullptr ){
+        printf("resp is %s\n",reply->str);
+        auto result = make_unique<string>(reply->str);
+        freeReplyObject(reply);
+        return std::move(result);
     }
     return nullptr;
 }

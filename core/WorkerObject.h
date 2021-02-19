@@ -14,7 +14,7 @@ public:
     WorkerObject(shared_ptr<Distpacher> dispatcher):
     m_dispatcher(dispatcher){
         m_redis = std::make_unique<Redis>();
-        auto addr = std::make_unique<string_view>("119.3.111.72");
+        auto addr = std::make_unique<string_view>("192.168.1.132");
         m_redis->connect(std::move(addr),6379);
     }
     ~WorkerObject(){
