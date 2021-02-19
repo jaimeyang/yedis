@@ -28,7 +28,20 @@ void loadLua() {
     }
     lua_pcall(l,0,0,0);
     lua_getglobal(l,"main");
-    lua_pcall(l,0,0,0);
+    auto s = lua_pcall(l,0,1,0);
+    if ( s != LUA_OK ) {
+        fprintf(stderr, "\nFATAL ERROR:%s\n\n", lua_tostring(l, -1));
+    }
+    size_t len = 40;
+    char* v = const_cast<char *>(lua_tolstring(l, -1, &len));
+    printf("v is %s\n",v);
+
+//    free((void *) v);
+    lua_getglobal(l,"test");
+    lua_pcall(l,0,1,0);
+    lua_close(l);
+    printf("v is %s\n",v);
+    free((void *) v);
 }
 
 int main(int argc, char* argv[]){

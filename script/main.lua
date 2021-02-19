@@ -3,8 +3,14 @@
 --- Created by jaime.
 --- DateTime: 2021/2/19 下午11:06
 ---
+local s = "sss"
 
+function test(s1)
+    print(s1)
+end
 
 function main()
     print("test")
+    local t1 = "qwertyuiopasdfghjklzxcvbnm1234567890123411"
+    return t1
 end
