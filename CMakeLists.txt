@@ -5,6 +5,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 add_definitions("-Wall -g")
 set(CMAKE_CXX_STANDARD 17)
+set(IS_TEST "ON")
 
 include_directories(core)
 include_directories(core/base)
@@ -68,14 +69,28 @@ set(SOURCE_FILES ${DIR_JSON_SRCS}
         core/base/Interger.h
         core/TcpEventObj.h
         core/Buffer.cpp
-        core/Buffer.h
-        main.cpp)
+        core/Buffer.h core/pool/MemPool.cpp core/pool/MemPool.h)
+#        main.cpp)
+#gtest unit src
+set(TEST_SRC test/luacrossc/TestLuaCrossC.cpp)
 
 add_executable(yedis ${SOURCE_FILES}
         ${LUA_LIB_SRC}
         ${LUA_SRC})
 
+if (${IS_TEST} STREQUAL "ON")
+    target_sources(yedis PRIVATE ${TEST_SRC})
+    include_directories(lib/googletest/googletest/include)
+    #gtest
+    add_subdirectory(lib/googletest)
+    #gtest
+    target_link_libraries(yedis gtest gtest_main)
+else()
+    target_sources(yedis PRIVATE main.cpp)
+endif ()
+
 target_link_libraries(yedis hiredis)
 target_link_libraries(yedis pthread)
 target_link_libraries(yedis m)
+
 

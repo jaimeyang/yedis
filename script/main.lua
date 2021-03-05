@@ -6,11 +6,13 @@
 local s = "sss"
 
 function test(s1)
-    print(s1)
+
 end
 
 function main()
-    print("test")
+    print(collectgarbage("count"))
     local t1 = "qwertyuiopasdfghjklzxcvbnm1234567890123411"
+    t1 = 's' .. t1
+    print(collectgarbage("count"))
     return t1
 end
