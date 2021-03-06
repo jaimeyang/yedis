@@ -50,7 +50,7 @@ public:
     }
 
     void createPool(int size);
-    void* allcateMem(int size);
+    void* allocateMem(int size);
 private:
     void initFreeList();
 

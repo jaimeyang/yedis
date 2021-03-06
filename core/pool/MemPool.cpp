@@ -31,7 +31,7 @@ void MemPool::initFreeList() {
     }
 }
 
-void *MemPool::allcateMem(int size) {
+void *MemPool::allocateMem(int size) {
 
     return nullptr;
 }
