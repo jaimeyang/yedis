@@ -9,6 +9,7 @@ set(IS_TEST "ON")
 
 include_directories(core)
 include_directories(core/base)
+include_directories(common)
 include_directories(db/cache)
 include_directories(lib/lua/include/)
 
@@ -69,10 +70,14 @@ set(SOURCE_FILES ${DIR_JSON_SRCS}
         core/base/Interger.h
         core/TcpEventObj.h
         core/Buffer.cpp
-        core/Buffer.h core/pool/MemPool.cpp core/pool/MemPool.h)
+        core/Buffer.h
+        core/pool/MemPool.cpp
+        core/pool/MemPool.h
+        common/CpuInfo.h test/mempool/TestMemPool.cpp test/mempool/TestMemPool.h)
 #        main.cpp)
 #gtest unit src
-set(TEST_SRC test/luacrossc/TestLuaCrossC.cpp)
+set(TEST_SRC test/luacrossc/TestLuaCrossC.cpp
+            test/cpu/TestCpu.cpp)
 
 add_executable(yedis ${SOURCE_FILES}
         ${LUA_LIB_SRC}
