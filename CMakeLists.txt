@@ -73,11 +73,13 @@ set(SOURCE_FILES ${DIR_JSON_SRCS}
         core/Buffer.h
         core/pool/MemPool.cpp
         core/pool/MemPool.h
-        common/CpuInfo.h test/mempool/TestMemPool.cpp test/mempool/TestMemPool.h)
+        common/CpuInfo.h common/Param.h)
 #        main.cpp)
 #gtest unit src
 set(TEST_SRC test/luacrossc/TestLuaCrossC.cpp
-            test/cpu/TestCpu.cpp)
+             test/cpu/TestCpu.cpp
+             test/mempool/TestMemPool.cpp
+             test/mempool/TestMemPool.h )
 
 add_executable(yedis ${SOURCE_FILES}
         ${LUA_LIB_SRC}

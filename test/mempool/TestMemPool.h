@@ -29,5 +29,15 @@ TEST_F(TestMemPool,test_createPool) {
     p->createPool(16 * 1024);
 }
 
+TEST_F(TestMemPool,test_posix_alignment) {
+    void* p = nullptr;
+    auto err = posix_memalign(&p,16,4096);
+//    p1.reset(unique_ptr<PoolHead>(p))
+    std::cout<<"test err"<<p<<std::endl;
+    void* p1 ;
+    auto err1 = posix_memalign(&p1,16,4096);
+    std::cout<<"test err"<<p1<<std::endl;
+}
+
 
 #endif //YEDIS_TESTMEMPOOL_H
