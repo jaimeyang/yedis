@@ -1525,14 +1525,14 @@ class ThreadWithParam : public ThreadWithParamBase {
 
 // Implements thread-local storage on Windows systems.
 //
-//   // Thread 1
+//   // IThread 1
 //   ThreadLocal<int> tl(100);  // 100 is the default value for each thread.
 //
-//   // Thread 2
+//   // IThread 2
 //   tl.set(150);  // Changes the value for thread 2 only.
 //   EXPECT_EQ(150, tl.get());
 //
-//   // Thread 1
+//   // IThread 1
 //   EXPECT_EQ(100, tl.get());  // In thread 1, tl has the original value.
 //   tl.set(200);
 //   EXPECT_EQ(200, tl.get());
@@ -2193,7 +2193,7 @@ using TimeInMillis = int64_t;  // Represents time in milliseconds.
 
 #endif  // !defined(GTEST_DECLARE_bool_)
 
-// Thread annotations
+// IThread annotations
 #if !defined(GTEST_EXCLUSIVE_LOCK_REQUIRED_)
 # define GTEST_EXCLUSIVE_LOCK_REQUIRED_(locks)
 # define GTEST_LOCK_EXCLUDED_(locks)

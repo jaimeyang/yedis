@@ -12,7 +12,9 @@ set(IS_TEST "ON")
 include_directories(core)
 include_directories(core/base)
 include_directories(common)
+include_directories(thread)
 include_directories(db/cache)
+include_directories(net)
 include_directories(lib/lua/include/)
 include_directories(lib/zookeeper-client-c/include)
 
@@ -76,21 +78,63 @@ set(SOURCE_FILES ${DIR_JSON_SRCS}
         core/Buffer.h
         core/pool/MemPool.cpp
         core/pool/MemPool.h
-        common/CpuInfo.h common/Param.h)
+        common/CpuInfo.h
+        common/Param.h
+        thread/IThread.cpp
+        net/INetEvent.cpp
+        net/INetEvent.h
+        net/IStream.cpp
+        net/IStream.h
+        common/Msg.h
+        net/NetProxy.cpp
+        net/NetProxy.h
+        net/StreamConnect.cpp
+        net/StreamConnect.h net/StreamListen.cpp net/StreamListen.h)
 #        main.cpp)
+
+if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" )
+    OPTION(DEFINE_LINUX"Option System" ON)
+    ADD_DEFINITIONS(-DLINUX)
+
+    set(HOST_SYSTEM_SRC thread/LinuxPth.cpp
+            net/LinuxNevent.cpp
+            net/LinuxNevent.h
+            net/LinuxStream.cpp
+            net/LinuxStream.h
+            net/LinuxConnect.cpp
+            net/LinuxConnect.h
+            net/LinuxListen.cpp
+            net/LinuxListen.h)
+elseif(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
+    set(HOST_SYSTEM_SRC thread/WinPth.cpp)
+endif()
+
+include (CheckIncludeFile)
+check_include_file("sys/epoll.h" HAVE_EPOLL_H)
+if (HAVE_EPOLL_H)
+    OPTION(DEFINE_EPOLL"Option description" ON)
+    ADD_DEFINITIONS(-DEPOLL)
+    set(MULTI_SRC
+            net/Epoll.cpp
+            net/Epoll.h)
+endif (HAVE_EPOLL_H)
+
 #gtest unit src
 set(TEST_SRC test/luacrossc/TestLuaCrossC.cpp
              test/cpu/TestCpu.cpp
              test/mempool/TestMemPool.cpp
              test/mempool/TestMemPool.h
-             test/zookeeper/TestZookeeper.cpp)
+             test/zookeeper/TestZookeeper.cpp
+             test/phtread/linux/TestPthread.cpp)
 
 
 link_directories(lib/zookeeper-client-c/lib)
 
-add_executable(yedis ${SOURCE_FILES}
+add_executable(yedis ${MULTI_SRC}
+        ${SOURCE_FILES}
         ${LUA_LIB_SRC}
-        ${LUA_SRC})
+        ${LUA_SRC}
+        ${HOST_SYSTEM_SRC})
 
 if (${IS_TEST} STREQUAL "ON")
     target_sources(yedis PRIVATE ${TEST_SRC})
