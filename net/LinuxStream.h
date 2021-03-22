@@ -7,13 +7,17 @@
 #include "IStream.h"
 
 namespace yedis {
-    class LinuxStream : public IStream {
+    class LinuxStream : public INetEvent {
     public:
         ~LinuxStream() {
 
         }
-        int read(vector<Msg> &msgs) override;
-        int write(vector<Msg> &msgs) override;
+        void inEvent(int fd) override;
+        void outEvent(int fd) override;
+        void timeOutEvent(int fd) override;
+        void errEvent(int fd) override;
+//        int tcpRead(vector<Msg> &msgs) override;
+//        int tcpWrite(vector<Msg> &msgs) override;
     };
 }
 

@@ -13,7 +13,7 @@ namespace yedis {
     class StreamConnect {
     public:
         virtual ~StreamConnect() = default;
-        virtual void connect(const string& addr) = 0;
+        virtual int connectServer(const string& addr,int port) = 0;
     };
 
 }

@@ -6,13 +6,14 @@
 #define YEDIS_ISTREAM_H
 
 #include "Msg.h"
+#include "INetEvent.h"
 
 namespace yedis {
-    class IStream {
+    class IStream : public INetEvent  {
     public:
         virtual  ~IStream() = default;
-        virtual int read(vector<Msg>& msgs) = 0;
-        virtual int write(vector<Msg>& msgs) = 0;
+        virtual int tcpRead(vector<Msg>& msgs) = 0;
+        virtual int tcpWrite(vector<Msg>& msgs) = 0;
     };
 }
 

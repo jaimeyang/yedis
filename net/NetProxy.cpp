@@ -17,14 +17,21 @@ void yedis::NetProxy::rmFd(int fd) {
 }
 
 void yedis::NetProxy::regEvent(INetEvent* event) {
-    this->m_io->regEvent(event);
+//    this->m_io->regEvent(event);
 }
 
-void yedis::NetProxy::startServer(const string &addr) {
-    this->m_server->listen(addr);
+void yedis::NetProxy::startServer(const string &addr,int port) {
+    this->m_thr->start([this](void*){
+#ifdef LINUX
+        auto stream = make_unique<LinuxStream>();
+#endif
+        m_io->bindNevent(std::move(stream));
+        m_io->loop();
+    }, nullptr);
+    this->m_server->listenServer(addr,port);
 }
 
-void yedis::NetProxy::connect(const string &addr) {
+void yedis::NetProxy::connect(const string &addr,int port) {
 
 }
 

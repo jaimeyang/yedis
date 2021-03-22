@@ -11,7 +11,13 @@ namespace yedis {
     class LinuxConnect : public StreamConnect {
     public:
         ~LinuxConnect() = default;
-        void connect(const string &addr) override;
+        int connectServer(const string &addr,int port) override;
+
+    private:
+        int createSocket();
+
+    private:
+        int m_fd;
     };
 }
 

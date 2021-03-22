@@ -13,9 +13,9 @@ namespace yedis {
         ~LinuxNevent() {
 
         }
-        void inEvent() override;
-        void outEvent() override;
-        void timeOutEvent() override;
+        void inEvent(int fd) override;
+        void outEvent(int fd) override;
+        void timeOutEvent(int fd) override;
     };
 
 }

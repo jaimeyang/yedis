@@ -6,12 +6,14 @@
 #define YEDIS_STREAMLISTEN_H
 
 #include <string>
+#include "IMultiIo.h"
 
 using namespace std;
 namespace yedis {
     class StreamListen {
     public:
         virtual ~StreamListen() = default;
+        virtual void bindMIo(IMultiIo* io) = 0;
         virtual void listenServer(const string& addr,int port) = 0;
     };
 }

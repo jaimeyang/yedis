@@ -9,6 +9,7 @@
 #include <strings.h>
 #include <arpa/inet.h>
 #include <cstring>
+#include "LinuxStream.h"
 
 void yedis::LinuxListen::listenServer(const string& addr,int port) {
     auto fd = socket(AF_INET,SOCK_STREAM,0);
@@ -33,5 +34,23 @@ void yedis::LinuxListen::listenServer(const string& addr,int port) {
         std::cout<<"listen error "<<strerror(errno)<<std::endl;
         return;
     }
+    this->acceptServer(fd);
+}
+
+void yedis::LinuxListen::acceptServer(int fd) {
+    while (true) {
+        sockaddr addr;
+        auto err = accept(fd, &addr, reinterpret_cast<socklen_t *>(sizeof(sockaddr)));
+        if (err < 0) {
+            cout<<"linux acceptserver err is "<<strerror(errno)<<endl;
+            continue;
+        }
+        this->m_io->addFd(fd);
+    }
 
 }
+
+void yedis::LinuxListen::bindMIo(yedis::IMultiIo *io) {
+    this->m_io = io;
+}
+

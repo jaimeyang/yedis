@@ -89,7 +89,9 @@ set(SOURCE_FILES ${DIR_JSON_SRCS}
         net/NetProxy.cpp
         net/NetProxy.h
         net/StreamConnect.cpp
-        net/StreamConnect.h net/StreamListen.cpp net/StreamListen.h)
+        net/StreamConnect.h
+        net/StreamListen.cpp
+        net/StreamListen.h)
 #        main.cpp)
 
 if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" )
@@ -124,8 +126,10 @@ set(TEST_SRC test/luacrossc/TestLuaCrossC.cpp
              test/cpu/TestCpu.cpp
              test/mempool/TestMemPool.cpp
              test/mempool/TestMemPool.h
-             test/zookeeper/TestZookeeper.cpp
-             test/phtread/linux/TestPthread.cpp)
+#             test/zookeeper/TestZookeeper.cpp
+             test/phtread/linux/TestPthread.cpp
+             test/net/TestNet.cpp
+             test/net/TestNet.h)
 
 
 link_directories(lib/zookeeper-client-c/lib)
@@ -147,8 +151,8 @@ else()
     target_sources(yedis PRIVATE main.cpp)
 endif ()
 
-target_link_libraries(yedis zookeeper)
-target_link_libraries(yedis hashtable)
+#target_link_libraries(yedis zookeeper)
+#target_link_libraries(yedis hashtable)
 target_link_libraries(yedis hiredis)
 target_link_libraries(yedis pthread)
 target_link_libraries(yedis m)

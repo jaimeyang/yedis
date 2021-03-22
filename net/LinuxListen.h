@@ -11,8 +11,14 @@ namespace yedis {
     class LinuxListen : public StreamListen{
     public:
         ~LinuxListen() = default;
+        void bindMIo(IMultiIo *io) override;
         void listenServer(const string& addr,int port) override;
+
+
+    private:
         void acceptServer(int fd);
+    private:
+        IMultiIo* m_io;
     };
 
 }
