@@ -9,13 +9,14 @@ using namespace std;
 
 void yedis::LinuxStream::inEvent(int fd) {
 //    IStream::inEvent(fd);
+    cout<<"inEvent fd "<<fd<<endl;
     char data[1024];
     auto len = recv(fd,data,1024,0);
     cout<<"data is "<<data<<endl;
 }
 
 void yedis::LinuxStream::outEvent(int fd) {
-//    IStream::outEvent(fd);
+    cout<<"LinuxStream outEvent fd "<<fd<<endl;
 }
 
 void yedis::LinuxStream::timeOutEvent(int fd) {

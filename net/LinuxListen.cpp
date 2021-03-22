@@ -3,12 +3,6 @@
 //
 
 #include "LinuxListen.h"
-#include <sys/socket.h>
-#include <iostream>
-#include <netinet/in.h>
-#include <strings.h>
-#include <arpa/inet.h>
-#include <cstring>
 #include "LinuxStream.h"
 
 void yedis::LinuxListen::listenServer(const string& addr,int port) {
@@ -18,15 +12,15 @@ void yedis::LinuxListen::listenServer(const string& addr,int port) {
         return;
     }
     sockaddr_in sock;
-    bzero(&sock,sizeof(addr));
+    bzero(&sock,sizeof(sockaddr_in));
     sock.sin_family = AF_INET;
     sock.sin_port = htons(port);
     sock.sin_addr.s_addr =  inet_addr(addr.c_str());
 
     int reuse = 1;
     setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(int));
-    if ( bind(fd,(struct sockaddr*)&addr,sizeof(addr)) < 0 ){
-        std::cout<<"bind error "<<errno<<std::endl;
+    if ( bind(fd,(struct sockaddr*)&sock,sizeof(sock)) < 0 ){
+        std::cout<<"bind error "<<strerror(errno)<<std::endl;
         return;
     }
 
@@ -34,18 +28,22 @@ void yedis::LinuxListen::listenServer(const string& addr,int port) {
         std::cout<<"listen error "<<strerror(errno)<<std::endl;
         return;
     }
-    this->acceptServer(fd);
+    socklen_t len = sizeof(sock);
+    this->acceptServer(fd,sock,&len);
 }
 
-void yedis::LinuxListen::acceptServer(int fd) {
+void yedis::LinuxListen::acceptServer(int fd,sockaddr_in addr,socklen_t* len) {
     while (true) {
-        sockaddr addr;
-        auto err = accept(fd, &addr, reinterpret_cast<socklen_t *>(sizeof(sockaddr)));
+        auto err = accept(fd, (sockaddr*)&addr, len);
         if (err < 0) {
+            if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                continue;
+            }
             cout<<"linux acceptserver err is "<<strerror(errno)<<endl;
             continue;
         }
-        this->m_io->addFd(fd);
+        cout<<"accept "<<err<<endl;
+        this->m_io->addFd(err);
     }
 
 }

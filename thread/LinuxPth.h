@@ -18,7 +18,6 @@ namespace yedis {
     private:
         function<void(void*)> m_func;
         void* m_data = nullptr;
-        pthread_t m_pid;
     };
 }
 

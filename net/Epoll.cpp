@@ -23,47 +23,34 @@ void yedis::Epoll::bindNevent(unique_ptr<INetEvent> event) {
 
 void yedis::Epoll::addFd(int fd) {
     auto event = new epoll_event();
-    event->events = EPOLLIN | EPOLLOUT | EPOLLERR;
+    event->events = EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLET;
     event->data.fd = fd;
-    auto err = 0;
-    try {
-        err = epoll_ctl(this->m_ep_fd,EPOLL_CTL_ADD,fd,event);
-    } catch (...) {
-        if (err != 0) {
-            cout<<"epoll_add error "<<strerror(errno)<<" and fd is "<<fd<<endl;
-            return;
-        }
+    auto err = epoll_ctl(this->m_ep_fd,EPOLL_CTL_ADD,fd,event);
+    if (err != 0) {
+        cout<<"epoll_add error "<<strerror(errno)<<" and fd is "<<fd<<endl;
+        return;
     }
-
 }
 
 void yedis::Epoll::rmFd(int fd) {
-    auto err = 0;
-    try {
-        err = epoll_ctl(this->m_ep_fd,EPOLL_CTL_DEL,fd, nullptr);
-    } catch (...) {
-        if (err != 0) {
-            cout<<"epoll_add error "<<strerror(errno)<<" and fd is "<<fd<<endl;
-            return;
-        }
+    auto err = epoll_ctl(this->m_ep_fd,EPOLL_CTL_DEL,fd, nullptr);
+    if (err != 0) {
+        cout<<"epoll_add error "<<strerror(errno)<<" and fd is "<<fd<<endl;
+        return;
     }
 }
 
 void yedis::Epoll::regEvent(INetEvent* netev,int fd) {
 //    auto efd = f
     auto event = new epoll_event();
-    event->events = EPOLLIN | EPOLLOUT | EPOLLERR;
+    event->events = EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLET;
     event->data.fd = fd;
-    auto err = 0;
-    try {
-        err = epoll_ctl(this->m_ep_fd,EPOLLIN,fd, event);
-    } catch (...) {
+    auto err = epoll_ctl(this->m_ep_fd,EPOLLIN,fd, event);
+    if (err != 0) {
+        cout<<"epoll_add error "<<strerror(errno)<<" and fd is "<<fd<<endl;
         delete netev;
         netev = nullptr;
-        if (err != 0) {
-            cout<<"epoll_add error "<<strerror(errno)<<" and fd is "<<fd<<endl;
-            return;
-        }
+        return;
     }
     this->m_events[fd] = netev;
 }
@@ -88,7 +75,6 @@ void yedis::Epoll::loop() {
                     event->errEvent(fd);
                 }
             } else {
-                //                auto event = (INetEvent*)ep_event.data.ptr;
                 if (ep_event.events & EPOLLIN) {
                     this->m_stram->inEvent(fd);
                 }
