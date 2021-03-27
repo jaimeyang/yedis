@@ -26,11 +26,3 @@ void yedis::LinuxStream::timeOutEvent(int fd) {
 void yedis::LinuxStream::errEvent(int fd) {
 //    IStream::errEvent(fd);
 }
-
-//int yedis::LinuxStream::tcpRead(vector<Msg> &msgs) {
-//    return 0;
-//}
-//
-//int yedis::LinuxStream::tcpWrite(vector<Msg> &msgs) {
-//    return 0;
-//}

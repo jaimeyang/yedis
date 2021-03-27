@@ -6,7 +6,7 @@
 #define YEDIS_TESTMEMPOOL_H
 
 #include "gtest/gtest.h"
-#include "pool/MemPool.h"
+#include "../../mempool/lua/MemPool.h"
 #include <memory>
 
 class TestMemPool : public testing::Test {

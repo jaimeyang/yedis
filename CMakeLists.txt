@@ -57,27 +57,10 @@ set(LUA_SRC  lua/LuaScript.cpp
 
 
 set(SOURCE_FILES ${DIR_JSON_SRCS}
-        core/Object.cpp
-        core/EventFactory.cpp
-        core/Event.cpp
-        core/Server.cpp
-        core/ServerObj.cpp
-        core/EpollDispatcher.cpp
-        core/Worker.cpp
-        core/Worker.h
         db/cache/Redis.cpp
         db/cache/Redis.h
-        core/pool/WorkerPool.cpp
-        core/pool/WorkerPool.h
-        core/WorkerObject.cpp
-        core/WorkerObject.h
-        core/base/Interger.cpp
-        core/base/Interger.h
-        core/TcpEventObj.h
-        core/Buffer.cpp
-        core/Buffer.h
-        core/pool/MemPool.cpp
-        core/pool/MemPool.h
+        mempool/lua/MemPool.cpp
+        mempool/lua/MemPool.h
         common/CpuInfo.h
         common/Param.h
         thread/IThread.cpp
@@ -91,7 +74,9 @@ set(SOURCE_FILES ${DIR_JSON_SRCS}
         net/StreamConnect.cpp
         net/StreamConnect.h
         net/StreamListen.cpp
-        net/StreamListen.h)
+        net/StreamListen.h
+        net/StreamBuf.cpp
+        net/StreamBuf.h worker/Worker.cpp worker/Worker.h)
 #        main.cpp)
 
 if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" )
@@ -118,7 +103,7 @@ if (HAVE_EPOLL_H)
     ADD_DEFINITIONS(-DEPOLL)
     set(MULTI_SRC
             net/Epoll.cpp
-            net/Epoll.h)
+            net/Epoll.h net/StreamBuf.cpp net/StreamBuf.h worker/Worker.cpp worker/Worker.h)
 endif (HAVE_EPOLL_H)
 
 #gtest unit src
