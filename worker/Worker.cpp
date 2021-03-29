@@ -28,6 +28,8 @@ void yedis::Worker::loop() {
         cout<<"data is "<<data<<endl;
         cout<<"len is "<<len<<endl;
         this->setState(WorkState::IDLE);
+        //todo add the function of write in the LinuxStream,first,to write the data in direct
+        //if cannot write the data,register the write event,
     }
 }
 
