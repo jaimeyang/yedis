@@ -5,6 +5,8 @@
 #include <iostream>
 #include "NetProxy.h"
 
+yedis::NetProxy* yedis::NetProxy::m_proxy = nullptr;
+
 void yedis::NetProxy::initNet() {
     this->m_io->init();
 }
@@ -44,12 +46,21 @@ void yedis::NetProxy::startServer(const string &addr,int port) {
     }, nullptr);
 }
 
-void yedis::NetProxy::connect(const string &addr,int port,INetEvent* netEvent) {
+int yedis::NetProxy::connect(const string &addr,int port,INetEvent* netEvent) {
 #ifdef LINUX
     auto c = make_unique<LinuxConnect>();
     auto fd = c->connectServer(addr,port);
 #endif
     this->m_cio->regEvent(netEvent,fd);
+    return fd;
+}
+
+void yedis::NetProxy::closeClient(int fd) {
+    this->m_cio->rmFd(fd);
+}
+
+void yedis::NetProxy::rmServerFd(int fd) {
+    this->m_io->rmFd(fd);
 }
 
 

@@ -2,6 +2,7 @@
 // Created by jaime on 2021/3/21.
 //
 
+#include <fcntl.h>
 #include "LinuxListen.h"
 #include "LinuxStream.h"
 
@@ -43,6 +44,14 @@ void yedis::LinuxListen::acceptServer(int fd,sockaddr_in addr,socklen_t* len) {
             continue;
         }
         cout<<"accept "<<err<<endl;
+        //set noblock io
+        int flags;
+        if ((flags = fcntl(err, F_GETFL, NULL)) < 0) {
+            cout<<"LinuxListen fcntl err is "<<strerror(errno)<<endl;
+        }
+        if (fcntl(err, F_SETFL, flags | O_NONBLOCK) == -1) {
+            cout<<"LinuxListen fcntl err is "<<strerror(errno)<<endl;
+        }
         this->m_io->addFd(err);
     }
 

@@ -31,7 +31,7 @@ public:
 
 
 TEST_F(TestNet,test_connect) {
-    auto proxy = make_unique<NetProxy>();
+    auto proxy = NetProxy::getNproxy();
     proxy->startClient();
     sleep(1);
     string addr("192.168.1.147");
@@ -39,10 +39,12 @@ TEST_F(TestNet,test_connect) {
     proxy->startServer(addr,port);
     sleep(1);
     auto ev = new TestNevent;
-    proxy->connect(addr,port,ev);
+    auto fd = proxy->connect(addr,port,ev);
+    sleep(1);
+//    proxy->closeClient(fd);
+//    cout<<"close"<<endl;
     while (true) {
 //        cout<<"connect"<<endl;
         sleep(1);
-
     }
 }

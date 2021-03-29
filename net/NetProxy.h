@@ -26,7 +26,7 @@ using namespace std;
 namespace yedis {
     //网络代理类，屏蔽掉不同平台的网络实现
     class NetProxy {
-    public:
+    private:
         NetProxy()
         {
 #ifdef LINUX
@@ -38,19 +38,30 @@ namespace yedis {
             m_cio = make_unique<Epoll>();
 #endif
         }
+    public:
+
+        static NetProxy* getNproxy() {
+            if (m_proxy == nullptr) {
+                m_proxy = new NetProxy();
+            }
+            return m_proxy;
+        }
         void initNet();
         void addFd(int fd);
         void rmFd(int fd);
         void regEvent(INetEvent* event);
         void startClient();
         void startServer(const string& addr,int port);
-        void connect(const string& addr,int port,INetEvent* netEvent);
+        int connect(const string& addr,int port,INetEvent* netEvent);
+        void closeClient(int fd);
+        void rmServerFd(int fd);
     private:
         unique_ptr<IMultiIo> m_io;
         unique_ptr<IMultiIo> m_cio;
         unique_ptr<StreamListen> m_server;
         unique_ptr<StreamConnect> m_connect;
         unique_ptr<IThread> m_thr;
+        static NetProxy* m_proxy;
     };
 
 }

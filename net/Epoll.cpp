@@ -7,6 +7,10 @@
 #include <iostream>
 #include <cstring>
 #include "LinuxStream.h"
+#include <sys/socket.h>
+#include <unistd.h>
+
+
 
 void yedis::Epoll::init() {
     this->m_ep_fd = epoll_create(1);
@@ -38,6 +42,8 @@ void yedis::Epoll::rmFd(int fd) {
         cout<<"epoll_add error "<<strerror(errno)<<" and fd is "<<fd<<endl;
         return;
     }
+    //todo use the correct method to close the net
+    close(fd);
 }
 
 void yedis::Epoll::regEvent(INetEvent* netev,int fd) {
@@ -59,6 +65,14 @@ void yedis::Epoll::loop() {
     auto events = new epoll_event[this->m_max_events];
     while (true) {
         int n = epoll_wait(this->m_ep_fd,events,this->m_max_events,1);
+        if (n < 0) {
+            if (errno == EINTR) {
+                continue;
+            } else {
+                cout<<"epoll wait errno"<<errno<<endl;
+                break;
+            }
+        }
         for (int i = 0; i < n; ++i) {
             auto ep_event = events[i];
             auto fd = events[i].data.fd;
