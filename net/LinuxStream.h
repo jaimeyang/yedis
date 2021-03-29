@@ -5,10 +5,20 @@
 #ifndef YEDIS_LINUXSTREAM_H
 #define YEDIS_LINUXSTREAM_H
 #include "IStream.h"
+#include "Wmanager.h"
+#include "StreamBuf.h"
+#include <unordered_map>
+
+using namespace std;
 
 namespace yedis {
     class LinuxStream : public INetEvent {
     public:
+        LinuxStream() :
+        m_wm(make_unique<Wmanager>())
+        {
+            m_wm->createPool(2);
+        }
         ~LinuxStream() {
 
         }
@@ -16,8 +26,10 @@ namespace yedis {
         void outEvent(int fd) override;
         void timeOutEvent(int fd) override;
         void errEvent(int fd) override;
-//        int tcpRead(vector<Msg> &msgs) override;
-//        int tcpWrite(vector<Msg> &msgs) override;
+
+    private:
+        unique_ptr<Wmanager> m_wm;
+        unordered_map<int,unique_ptr<StreamBuf>> m_bufs;
     };
 }
 

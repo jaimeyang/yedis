@@ -6,18 +6,22 @@
 #define YEDIS_STREAMBUF_H
 
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
 namespace yedis {
     class StreamBuf {
     public:
+        StreamBuf() {
+            this->setSize(1024);
+        }
         void setSize(int size) {
             this->m_data.reserve(size);
         }
         //data :返回可以读的位置
         //返回值是读取的字节数
-        int read(char* data,int n);
+        int read(char** data,int n);
         //成功处理的字节数
         void readFinish(int n);
         int readAble() {

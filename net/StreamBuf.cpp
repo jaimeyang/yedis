@@ -5,12 +5,12 @@
 #include "StreamBuf.h"
 #include <iostream>
 
-int yedis::StreamBuf::read(char* data,int n) {
+int yedis::StreamBuf::read(char** data,int n) {
     if (this->readAble() == 0) {
         data = nullptr;
         return 0;
     }
-    data = this->m_data.data() + this->m_r_index;
+    *data = this->m_data.data() + this->m_r_index;
     if (n > this->readAble()) {
         return this->readAble();
     }

@@ -8,11 +8,22 @@
 using namespace std;
 
 void yedis::LinuxStream::inEvent(int fd) {
-//    IStream::inEvent(fd);
-    cout<<"inEvent fd "<<fd<<endl;
-    char data[1024];
-    auto len = recv(fd,data,1024,0);
-    cout<<"data is "<<data<<endl;
+    auto it = m_bufs.find(fd);
+    if (it == this->m_bufs.end()) {
+        this->m_bufs[fd] = make_unique<StreamBuf>();
+    }
+    auto len = 0;
+    while ( (len = recv(fd,m_bufs[fd]->write(),m_bufs[fd]->writeAable(),0)) < 0) {
+        if (len < -1) {
+            if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                continue;
+            }
+        }
+        cout<<"close "<<endl;
+        m_bufs[fd].release();
+    }
+    this->m_bufs[fd]->writeFinish(len);
+    this->m_wm->work(m_bufs[fd].get());
 }
 
 void yedis::LinuxStream::outEvent(int fd) {

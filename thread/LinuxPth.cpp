@@ -52,3 +52,7 @@ void yedis::LinuxPth::await() {
 void yedis::LinuxPth::callfunc() {
     this->m_func(this->m_data);
 }
+
+void yedis::LinuxPth::kill() {
+
+}

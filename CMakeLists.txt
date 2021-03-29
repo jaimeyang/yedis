@@ -17,6 +17,7 @@ include_directories(db/cache)
 include_directories(net)
 include_directories(lib/lua/include/)
 include_directories(lib/zookeeper-client-c/include)
+include_directories(worker)
 
 #add build lua
 set(LUA_LIB_SRC lib/lua/src/lapi.c
@@ -76,7 +77,11 @@ set(SOURCE_FILES ${DIR_JSON_SRCS}
         net/StreamListen.cpp
         net/StreamListen.h
         net/StreamBuf.cpp
-        net/StreamBuf.h worker/Worker.cpp worker/Worker.h)
+        net/StreamBuf.h
+        worker/Worker.cpp
+        worker/Worker.h
+        worker/Wmanager.cpp
+        worker/Wmanager.h)
 #        main.cpp)
 
 if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" )
@@ -103,7 +108,7 @@ if (HAVE_EPOLL_H)
     ADD_DEFINITIONS(-DEPOLL)
     set(MULTI_SRC
             net/Epoll.cpp
-            net/Epoll.h net/StreamBuf.cpp net/StreamBuf.h worker/Worker.cpp worker/Worker.h)
+            net/Epoll.h)
 endif (HAVE_EPOLL_H)
 
 #gtest unit src

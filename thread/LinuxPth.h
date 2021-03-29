@@ -14,6 +14,7 @@ namespace yedis {
         void start(function<void(void*)>func,void* data = nullptr) override;
         void stop() override;
         void await() override;
+        void kill() override;
         void callfunc();
     private:
         function<void(void*)> m_func;

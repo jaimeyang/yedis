@@ -20,6 +20,8 @@ public:
 
     void outEvent(int fd) override {
         cout<<" TestNevent outEvent fd is "<<fd<<endl;
+        char* data = "wokao";
+        send(fd,data,strlen(data),0);
     }
 
     void inEvent(int fd) override {
@@ -31,13 +33,16 @@ public:
 TEST_F(TestNet,test_connect) {
     auto proxy = make_unique<NetProxy>();
     proxy->startClient();
+    sleep(1);
     string addr("192.168.1.147");
     auto port = 2183;
     proxy->startServer(addr,port);
+    sleep(1);
     auto ev = new TestNevent;
+    proxy->connect(addr,port,ev);
     while (true) {
-        cout<<"connect"<<endl;
-        proxy->connect(addr,port,ev);
+//        cout<<"connect"<<endl;
         sleep(1);
+
     }
 }
