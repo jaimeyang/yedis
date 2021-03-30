@@ -26,10 +26,13 @@ namespace yedis {
         void outEvent(int fd) override;
         void timeOutEvent(int fd) override;
         void errEvent(int fd) override;
-
+        void writeNet(int fd, unique_ptr<StreamBuf> buf) override;
+    private:
+        int sendNet(int fd,char* data,int len);
     private:
         unique_ptr<Wmanager> m_wm;
         unordered_map<int,unique_ptr<StreamBuf>> m_bufs;
+        unordered_map<int,unique_ptr<StreamBuf>> m_w_buf;
     };
 }
 

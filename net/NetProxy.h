@@ -55,6 +55,7 @@ namespace yedis {
         int connect(const string& addr,int port,INetEvent* netEvent);
         void closeClient(int fd);
         void rmServerFd(int fd);
+        void regSendEvent(INetEvent* event,int fd);
     private:
         unique_ptr<IMultiIo> m_io;
         unique_ptr<IMultiIo> m_cio;

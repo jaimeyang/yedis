@@ -19,13 +19,16 @@ public:
     }
 
     void outEvent(int fd) override {
-        cout<<" TestNevent outEvent fd is "<<fd<<endl;
         char* data = "wokao";
         send(fd,data,strlen(data),0);
     }
 
     void inEvent(int fd) override {
-        cout<<"inEvent fd is "<<fd<<endl;
+//        cout<<"inEvent fd is "<<fd<<endl;
+    }
+
+    void writeNet(int fd, unique_ptr<StreamBuf> buf) override {
+
     }
 };
 

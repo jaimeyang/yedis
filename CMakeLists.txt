@@ -81,7 +81,7 @@ set(SOURCE_FILES ${DIR_JSON_SRCS}
         worker/Worker.cpp
         worker/Worker.h
         worker/Wmanager.cpp
-        worker/Wmanager.h)
+        worker/Wmanager.h net/Params.h)
 #        main.cpp)
 
 if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" )

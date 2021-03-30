@@ -20,7 +20,7 @@ namespace yedis {
         void bindNevent(unique_ptr<INetEvent> event) override;
         void addFd(int fd) override;
         void rmFd(int fd) override;
-        void regEvent(INetEvent* event,int fd) override;
+        void regEvent(INetEvent* event,int fd,POLL_EVENT pollevent) override;
         void loop() override;
     private:
     private:

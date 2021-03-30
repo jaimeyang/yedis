@@ -27,7 +27,8 @@ void yedis::Epoll::bindNevent(unique_ptr<INetEvent> event) {
 
 void yedis::Epoll::addFd(int fd) {
     auto event = new epoll_event();
-    event->events = EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLET;
+//    event->events = EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLET;
+    event->events = POLL_IN | POLL_OUT | POLL_ERROR | POLL_ET;
     event->data.fd = fd;
     auto err = epoll_ctl(this->m_ep_fd,EPOLL_CTL_ADD,fd,event);
     if (err != 0) {
@@ -46,10 +47,10 @@ void yedis::Epoll::rmFd(int fd) {
     close(fd);
 }
 
-void yedis::Epoll::regEvent(INetEvent* netev,int fd) {
+void yedis::Epoll::regEvent(INetEvent* netev,int fd,POLL_EVENT pollevent) {
 //    auto efd = f
     auto event = new epoll_event();
-    event->events = EPOLLIN | EPOLLOUT | EPOLLERR | EPOLLET;
+    event->events = pollevent;
     event->data.fd = fd;
     auto err = epoll_ctl(this->m_ep_fd,EPOLLIN,fd, event);
     if (err != 0) {
@@ -79,23 +80,23 @@ void yedis::Epoll::loop() {
             auto e_it = this->m_events.find(fd);
             if (e_it != this->m_events.end()) {
                 auto event = this->m_events[fd];
-                if (ep_event.events & EPOLLIN) {
+                if (ep_event.events & POLL_IN) {
                     event->inEvent(fd);
                 }
-                if (ep_event.events & EPOLLOUT) {
+                if (ep_event.events & POLL_OUT) {
                     event->outEvent(fd);
                 }
-                if (ep_event.events & EPOLLERR) {
+                if (ep_event.events & POLL_ERROR) {
                     event->errEvent(fd);
                 }
             } else {
-                if (ep_event.events & EPOLLIN) {
+                if (ep_event.events & POLL_IN) {
                     this->m_stram->inEvent(fd);
                 }
-                if (ep_event.events & EPOLLOUT) {
+                if (ep_event.events & POLL_OUT) {
                     this->m_stram->outEvent(fd);
                 }
-                if (ep_event.events & EPOLLERR) {
+                if (ep_event.events & POLL_ERROR) {
                     this->m_stram->errEvent(fd);
                 }
             }

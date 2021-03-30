@@ -8,6 +8,7 @@
 #include "StreamBuf.h"
 #include <memory>
 #include <condition_variable>
+#include "INetEvent.h"
 
 #ifdef LINUX
 #include "LinuxPth.h"
@@ -33,13 +34,15 @@ namespace yedis {
         }
         void loop();
         void notify();
-        void work(StreamBuf* buf);
+        void work(StreamBuf* buf,INetEvent* net,int fd);
     private:
         StreamBuf* m_buf = nullptr;
         WorkState m_state;
         unique_ptr<IThread> m_thr;
         condition_variable cv;
         mutex c_tex;
+        INetEvent* m_net;
+        int m_fd;
     };
 }
 

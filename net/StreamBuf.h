@@ -16,6 +16,7 @@ namespace yedis {
         StreamBuf() {
             this->setSize(1024);
         }
+        //todo 不允许复制，添加移动构造函数
         void setSize(int size) {
             this->m_data.reserve(size);
         }

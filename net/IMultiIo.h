@@ -6,8 +6,10 @@
 #define YEDIS_IMULTIIO_H
 #include "INetEvent.h"
 #include <memory>
+#include "Params.h"
 
 using namespace std;
+
 
 namespace yedis {
     class IMultiIo {
@@ -17,7 +19,7 @@ namespace yedis {
         virtual void bindNevent(unique_ptr<INetEvent> event) = 0;
         virtual void addFd(int fd) = 0;
         virtual void rmFd(int fd) = 0;
-        virtual void regEvent(INetEvent* event,int fd) = 0;
+        virtual void regEvent(INetEvent* event,int fd,POLL_EVENT pollevent) = 0;
         virtual void loop() = 0;
 
     private:

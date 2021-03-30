@@ -7,18 +7,19 @@
 
 #include "Worker.h"
 #include <memory>
-
+#include <queue>
+#include "INetEvent.h"
 using namespace std;
 
 namespace yedis {
+    //todo eventfd + select + timerevent
     class Wmanager {
     public:
         void createPool(int num);
-        void work(StreamBuf* buf);
-
+        void work(StreamBuf* buf,INetEvent* net,int fd);
     private:
-        vector<unique_ptr<Worker>> m_running;
-        vector<unique_ptr<Worker>> m_idle;
+        queue<unique_ptr<Worker>> m_running;
+        queue<unique_ptr<Worker>> m_idle;
     };
 
 }
