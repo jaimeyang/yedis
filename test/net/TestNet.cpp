@@ -19,12 +19,13 @@ public:
     }
 
     void outEvent(int fd) override {
+        cout<<"out event fd"<<fd<<endl;
         char* data = "wokao";
         send(fd,data,strlen(data),0);
     }
 
     void inEvent(int fd) override {
-//        cout<<"inEvent fd is "<<fd<<endl;
+       cout<<"inEvent fd is "<<fd<<endl;
     }
 
     void writeNet(int fd, unique_ptr<StreamBuf> buf) override {
@@ -43,7 +44,7 @@ TEST_F(TestNet,test_connect) {
     sleep(1);
     auto ev = new TestNevent;
     auto fd = proxy->connect(addr,port,ev);
-    sleep(1);
+    // sleep(1);
 //    proxy->closeClient(fd);
 //    cout<<"close"<<endl;
     while (true) {

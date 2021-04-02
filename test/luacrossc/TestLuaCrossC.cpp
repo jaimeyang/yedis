@@ -97,4 +97,9 @@ TEST_F(TestLuaCrossC,test_timer_gc) {
     }
 }
 
+
+TEST_F(TestLuaCrossC,test_pushcclosure) {
+    
+}
+
 #endif //YEDIS_TESTLUACROSSC_H
