@@ -15,9 +15,12 @@ include_directories(common)
 include_directories(thread)
 include_directories(db/cache)
 include_directories(net)
+include_directories(lua/LuaBridge/Source/)
+include_directories(lua/)
 include_directories(lib/lua/include/)
 include_directories(lib/zookeeper-client-c/include)
 include_directories(worker)
+include_directories(lib/spdlog/include)
 
 #add build lua
 set(LUA_LIB_SRC lib/lua/src/lapi.c
@@ -53,8 +56,7 @@ set(LUA_LIB_SRC lib/lua/src/lapi.c
         lib/lua/src/lvm.c
         lib/lua/src/lzio.c)
 
-set(LUA_SRC  lua/LuaScript.cpp
-                lua/LuaScript.h lua/LuaCommon.h)
+# set(LUA_SRC )
 
 
 set(SOURCE_FILES ${DIR_JSON_SRCS}
@@ -81,7 +83,9 @@ set(SOURCE_FILES ${DIR_JSON_SRCS}
         worker/Worker.cpp
         worker/Worker.h
         worker/Wmanager.cpp
-        worker/Wmanager.h net/Params.h)
+        worker/Wmanager.h 
+        lua/LuaFactory.cpp
+        net/Params.h)
 #        main.cpp)
 
 if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" )
@@ -112,39 +116,59 @@ if (HAVE_EPOLL_H)
 endif (HAVE_EPOLL_H)
 
 #gtest unit src
-set(TEST_SRC test/luacrossc/TestLuaCrossC.cpp
-             test/cpu/TestCpu.cpp
-             test/mempool/TestMemPool.cpp
-             test/mempool/TestMemPool.h
-#             test/zookeeper/TestZookeeper.cpp
-             test/phtread/linux/TestPthread.cpp
-             test/net/TestNet.cpp
-             test/net/TestNet.h)
+set(TEST_SRC 
+            test/luacrossc/TestLuaCrossC.cpp
+            test/luacrossc/TestLuaCModule.cpp
+            test/cpu/TestCpu.cpp
+            test/mempool/TestMemPool.cpp
+            test/mempool/TestMemPool.h
+#           test/zookeeper/TestZookeeper.cpp
+            test/phtread/linux/TestPthread.cpp
+            test/net/TestNet.cpp
+            test/net/TestNet.h
+            test/luafactory/TestLuaFactory.cpp
+            )
 
 
 link_directories(lib/zookeeper-client-c/lib)
+link_directories(lib/spdlog/lib)
+
+if (${IS_TEST} STREQUAL "ON")
+    #benchmark
+    include_directories(lib/benchmark/include)
+    link_directories(lib/benchmark)
+    # gtest
+    include_directories(lib/googletest/googletest/include)
+    link_directories(lib/googletest)
+else()
+endif()
+
+link_directories(lib/googletest)
 
 add_executable(yedis ${MULTI_SRC}
         ${SOURCE_FILES}
         ${LUA_LIB_SRC}
-        ${LUA_SRC}
         ${HOST_SYSTEM_SRC})
 
 if (${IS_TEST} STREQUAL "ON")
-    target_sources(yedis PRIVATE ${TEST_SRC})
-    include_directories(lib/googletest/googletest/include)
-    #gtest
-    add_subdirectory(lib/googletest)
-    #gtest
+    
+    target_link_libraries(yedis benchmark benchmark_main)
     target_link_libraries(yedis gtest gtest_main)
+
+    target_sources(yedis PRIVATE ${TEST_SRC})
+    target_sources(yedis PRIVATE gtestmain.cpp)
+
 else()
     target_sources(yedis PRIVATE main.cpp)
 endif ()
+
+
 
 #target_link_libraries(yedis zookeeper)
 #target_link_libraries(yedis hashtable)
 target_link_libraries(yedis hiredis)
 target_link_libraries(yedis pthread)
 target_link_libraries(yedis m)
+target_link_libraries(yedis spdlog)
 
 

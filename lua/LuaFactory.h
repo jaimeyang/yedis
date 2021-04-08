@@ -15,24 +15,25 @@ extern "C" {
 
 
 #include <functional>
+#include <string>
 
 using namespace std;
 
 namespace yedis {
-    class LuaFctory {
+    class LuaFactory {
         private:
-            LuaFctory() = default;
+            LuaFactory() = default;
         public:
-            static LuaFctory* getFactory() {
+            static LuaFactory* getFactory() {
                 if (m_lc != nullptr) {
-                    m_lc = new LuaFctory();
+                    m_lc = new LuaFactory();
                 }
 
                 return m_lc;
             }
-            void buildSlua(string& path,function<void(lua_State)> lamba);
+            void buildSlua(const string& path,function<void(lua_State*)> lamba = nullptr);
         private:
-            static LuaFctory* m_lc;
+            static LuaFactory* m_lc;
     };
 }
 

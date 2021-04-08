@@ -12,7 +12,6 @@
 using namespace std;
 
 namespace yedis {
-    //todo eventfd + select + timerevent
     class Wmanager {
     public:
         void createPool(int num);

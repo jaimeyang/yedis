@@ -1,28 +1,20 @@
-#ifndef _LUA_FACTORY_H_
-#define _LUA_FACTORY_H_
 
-#include <functional>
+#include "LuaFactory.h"
 
-using namespace std;
+yedis::LuaFactory* yedis::LuaFactory::m_lc = nullptr;
 
-namespace yedis {
-    class LuaFctory {
-        private:
-            LuaFctory() = default;
-        public:
-            static LuaFctory* getFactory() {
-                if (m_lc ) {
-                    m_lc = new LuaFctory();
-                }
 
-                return m_lc;
-            }
-            void buildSlua(string& path,)
-        private:
-            static LuaFctory* m_lc;
-    };
+void yedis::LuaFactory::buildSlua(const string& path,function<void(lua_State*)> lamba) {
+    lua_State* L = luaL_newstate();
+    luaL_openlibs(L);
+    if (lamba != nullptr) {
+        lamba(L);
+    }
+    
+    int ret = luaL_dofile(L,path.c_str());
+    if ( ret ) {
+        fprintf(stderr, "\nFATAL ERROR:%s\n\n", lua_tostring(L, -1));
+        return;
+    }
+    return;
 }
-
-
-
-#endif

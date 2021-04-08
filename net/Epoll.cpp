@@ -87,6 +87,7 @@ void yedis::Epoll::loop() {
                     event->outEvent(fd);
                 }
                 if (ep_event.events & POLL_ERROR) {
+                    cout<<"errno is "<<strerror(errno)<<endl;
                     event->errEvent(fd);
                 }
             } else {

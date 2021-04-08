@@ -13,14 +13,15 @@ void yedis::Wmanager::createPool(int num) {
 }
 
 void yedis::Wmanager::work(StreamBuf* buf,INetEvent* net,int fd) {
-    if (this->m_idle.size() > 0) {
-        while (this->m_idle.size() > 0) {
-            if (this->m_idle.front()->getState() == WorkState::RUNNING) {
-                this->m_running.push(std::move(this->m_idle.front()));
-                this->m_idle.pop();
-            } else {
-                this->m_idle.front()->work(buf,net,fd);
-            }
-        }
-    }
+//    if (this->m_idle.size() > 0) {
+//        while (this->m_idle.size() > 0) {
+//            if (this->m_idle.front()->getState() == WorkState::RUNNING) {
+//                this->m_running.push(std::move(this->m_idle.front()));
+//                this->m_idle.pop();
+//            } else {
+//                this->m_idle.front()->work(buf,net,fd);
+//            }
+//        }
+//    }
+
 }

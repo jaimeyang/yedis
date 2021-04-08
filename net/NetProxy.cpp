@@ -51,7 +51,7 @@ int yedis::NetProxy::connect(const string &addr,int port,INetEvent* netEvent) {
     auto c = make_unique<LinuxConnect>();
     auto fd = c->connectServer(addr,port);
 #endif
-    auto poll_ev = POLL_OUT | POLL_ERROR;
+    auto poll_ev = POLL_OUT | POLL_ERROR | POLL_ET;
     this->m_cio->regEvent(netEvent,fd,poll_ev);
     return fd;
 }
