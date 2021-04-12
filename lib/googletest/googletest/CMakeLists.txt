@@ -68,7 +68,7 @@ if(CMAKE_PROJECT_NAME STREQUAL "gtest" OR CMAKE_PROJECT_NAME STREQUAL "googletes
 
   # BUILD_SHARED_LIBS is a standard CMake variable, but we declare it here to
   # make it prominent in the GUI.
-  option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." OFF)
+  option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." ON)
 
 else()
 
@@ -81,7 +81,7 @@ else()
 
 endif()
 
-
+option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." ON)
 if (gtest_hide_internal_symbols)
   set(CMAKE_CXX_VISIBILITY_PRESET hidden)
   set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
@@ -327,3 +327,4 @@ $env:Path = \"$project_bin;$env:Path\"
   py_test(gtest_xml_output_unittest --no_stacktrace_support)
   py_test(googletest-json-output-unittest --no_stacktrace_support)
 endif()
+
