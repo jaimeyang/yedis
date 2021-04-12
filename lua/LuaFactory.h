@@ -25,15 +25,19 @@ namespace yedis {
             LuaFactory() = default;
         public:
             static LuaFactory* getFactory() {
-                if (m_lc != nullptr) {
+                if (m_lc == nullptr) {
                     m_lc = new LuaFactory();
                 }
 
                 return m_lc;
             }
             void buildSlua(const string& path,function<void(lua_State*)> lamba = nullptr);
+
+            void buildStreamBuf();
+            void callStreamBufLua(string& funcname);
         private:
             static LuaFactory* m_lc;
+            lua_State* m_streambuf_l = nullptr;
     };
 }
 
