@@ -23,7 +23,7 @@ public:
     }
 
 public:
-    void connect(unique_ptr<std::string_view> addr,int port);
+    void connect(string_view& addr,int port);
     unique_ptr<string> execCommand(const string_view& command);
 public:
     redisContext* m_context = nullptr;

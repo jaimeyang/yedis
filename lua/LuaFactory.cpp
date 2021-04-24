@@ -1,12 +1,12 @@
 
 #include "LuaFactory.h"
 #include "StreamBuf.h"
-#include "LuaBridge/LuaBridge.h"
+#include "Mysql.h"
 
 yedis::LuaFactory* yedis::LuaFactory::m_lc = nullptr;
 
 
-void yedis::LuaFactory::buildSlua(const string& path,function<void(lua_State*)> lamba) {
+void yedis::LuaFactory::buildSlua(const std::string& path,function<void(lua_State*)> lamba) {
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
     if (lamba != nullptr) {
@@ -22,7 +22,7 @@ void yedis::LuaFactory::buildSlua(const string& path,function<void(lua_State*)> 
 }
 
 void yedis::LuaFactory::buildStreamBuf() {
-    string path("script/StreamBuf.lua");
+    std::string path("script/StreamBuf.lua");
     lua_State* L = nullptr;
     this->buildSlua(path,[&L](lua_State* l){
         luabridge::getGlobalNamespace(l).beginClass<StreamBuf>("StreamBuf")
@@ -34,7 +34,30 @@ void yedis::LuaFactory::buildStreamBuf() {
     this->m_streambuf_l = L;
 }
 
-void yedis::LuaFactory::callStreamBufLua(string& funcname) {
+void yedis::LuaFactory::callStreamBufLua(std::string& funcname) {
     auto f = luabridge::getGlobal(this->m_streambuf_l,funcname.c_str());
     f();
+}
+
+lua_State* yedis::LuaFactory::buildMysql() {
+    std::string path("script/db/Mysql.lua");
+    lua_State* L = nullptr;
+    this->buildSlua(path,[&L](lua_State* l){
+        luabridge::getGlobalNamespace(l).beginClass<Mysql>("Mysql")
+        .addConstructor<void(*)()>()
+        .addFunction("open",&Mysql::open)
+        .addFunction("close",&Mysql::close)
+        .endClass();
+        L = l;
+    });
+    return L;
+}
+
+void yedis::LuaFactory::registerMysql(lua_State* l) {
+    luabridge::getGlobalNamespace(l).beginClass<Mysql>("Mysql")
+        .addConstructor<void(*)()>()
+        .addFunction("open",&Mysql::open)
+        .addFunction("close",&Mysql::close)
+        .addFunction("insert",&Mysql::insert)
+        .endClass();
 }

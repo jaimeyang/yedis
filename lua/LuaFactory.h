@@ -16,6 +16,8 @@ extern "C" {
 
 #include <functional>
 #include <string>
+#include "LuaBridge/LuaBridge.h"
+
 
 using namespace std;
 
@@ -31,10 +33,14 @@ namespace yedis {
 
                 return m_lc;
             }
-            void buildSlua(const string& path,function<void(lua_State*)> lamba = nullptr);
+            void buildSlua(const std::string& path,function<void(lua_State*)> lamba = nullptr);
 
             void buildStreamBuf();
-            void callStreamBufLua(string& funcname);
+            void callStreamBufLua(std::string& funcname);
+
+            lua_State* buildMysql();
+
+            void registerMysql(lua_State* l);
         private:
             static LuaFactory* m_lc;
             lua_State* m_streambuf_l = nullptr;

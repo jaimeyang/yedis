@@ -31,6 +31,7 @@ void yedis::Mysql::insert(const std::string &schema, const std::string &tb, cons
 
         luabridge::LuaRef val = luabridge::LuaRef::fromStack(l, -1);
         unsigned long pos = key.cast<unsigned long>();
+        
         if (val.isBool()) {
             Value v(val.cast<bool>());
             r.set(pos - 1, v);
@@ -50,5 +51,5 @@ void yedis::Mysql::insert(const std::string &schema, const std::string &tb, cons
 
 void yedis::Mysql::update(const std::string& schema,const std::string& tb,const luabridge::LuaRef& ref) {
     auto table = this->m_session->getSchema(schema).getTable(tb);
-    table.update().set().where().orderBy().limit().execute()
+    // table.update().set().where().orderBy().limit().
 }
