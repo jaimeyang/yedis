@@ -35,7 +35,8 @@ void yedis::LinuxStream::inEvent(int fd) {
         NetProxy::getNproxy()->rmServerFd(fd);
     } else {
         //todo 应该是回调到LUA层里面解析客户端协议，然后通过RPc调用到内部服务器
-        this->m_wm->work(m_bufs[fd].get(), this,fd);
+        string funcname("parse");
+        LuaFactory::getFactory()->callStreamBufLua(funcname);
     }
 
 }

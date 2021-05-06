@@ -8,6 +8,7 @@
 #include "Wmanager.h"
 #include "StreamBuf.h"
 #include <unordered_map>
+#include "LuaFactory.h"
 
 using namespace std;
 
@@ -18,6 +19,7 @@ namespace yedis {
         m_wm(make_unique<Wmanager>())
         {
             m_wm->createPool(2);
+            LuaFactory::getFactory()->buildStreamBuf();
         }
         ~LinuxStream() {
 
