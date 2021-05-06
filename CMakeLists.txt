@@ -14,7 +14,7 @@ include_directories(core)
 include_directories(core/base)
 include_directories(common)
 include_directories(thread)
-include_directories(db/cache)
+include_directories(db/redis)
 include_directories(db/mysql)
 include_directories(net)
 include_directories(lua/LuaBridge/Source/)
@@ -99,8 +99,8 @@ set(MYSQL
             db/mysql/Mysql.cpp
             db/mysql/MySqlclient.cpp)
 
-set(Redis
-            db/cache/Redis.cpp)
+set(REDIS
+            db/redis/Redis.cpp)
 
 if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" )
     OPTION(DEFINE_LINUX"Option System" ON)
