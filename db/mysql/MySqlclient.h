@@ -3,6 +3,7 @@
 #define _MYSQL_CLIENT_H_
 
 #include <string>
+#include "mysql.h"
 
 using namespace std;
 
@@ -14,11 +15,13 @@ namespace yedis
         MySqlclient(/* args */) = default;
         ~MySqlclient() = default;
         
-        void connect(const string &host, const string &user, const string &pwd, const string &db, unsigned int port);
-
+        bool connect(const string &host, const string &user, const string &pwd, const string &db, unsigned int port);
+        int crateTable(const string& sql);
+        int query(const string& sql);
     private:
         /* data */
-    private:
+    private:    
+        MYSQL m_mysql;
     };
 
 }
