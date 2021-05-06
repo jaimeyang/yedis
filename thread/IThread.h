@@ -11,12 +11,12 @@ using namespace std;
 
 namespace yedis {
     class IThread {
-    public:
-        virtual ~IThread() = default;
-        virtual void start(function<void(void*)>func,void* data = nullptr) = 0;
-        virtual void stop() = 0;
-        virtual void await() = 0;
-        virtual void kill() = 0;
+        public:
+            virtual ~IThread() = default;
+            virtual void start(function<void(void*)>func,void* data = nullptr) = 0;
+            virtual void stop() = 0;
+            virtual void await() = 0;
+            virtual void kill() = 0;
     };
 
 }
