@@ -5,7 +5,7 @@
 
 
 using namespace yedis;
-const string& lua_path = "script/test/luafactory/TestLuaFactory.lua";
+const string& lua_path_fa = "script/test/luafactory/TestLuaFactory.lua";
 
 int add_result = 0;
 
@@ -33,7 +33,8 @@ class TestLua {
 // https://github.com/vinniefalco/LuaBridge
 TEST_F(TestLuaFactory,test_lua_factory_buildslua) {
     lua_State* l = nullptr;
-    LuaFactory::getFactory()->buildSlua(lua_path,[&l](lua_State* L) {
+    LuaFactory::getFactory()->buildSlua(lua_path_fa,[&l](lua_State* L) {
+        
         auto test = luabridge::getGlobalNamespace(L).beginClass<TestLua>("TestLua")
             .addConstructor<void(*)()>()
             .addFunction("add",&TestLua::add)
