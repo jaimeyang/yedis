@@ -1,7 +1,8 @@
 
 #include "LuaFactory.h"
 #include "StreamBuf.h"
-#include "Mysql.h"
+// #include "Mysql.h"
+#include "MySqlclient.h"
 
 yedis::LuaFactory* yedis::LuaFactory::m_lc = nullptr;
 
@@ -40,24 +41,26 @@ void yedis::LuaFactory::callStreamBufLua(std::string& funcname) {
 }
 
 lua_State* yedis::LuaFactory::buildMysql() {
-    std::string path("script/db/Mysql.lua");
-    lua_State* L = nullptr;
-    this->buildSlua(path,[&L](lua_State* l){
-        luabridge::getGlobalNamespace(l).beginClass<Mysql>("Mysql")
-        .addConstructor<void(*)()>()
-        .addFunction("open",&Mysql::open)
-        .addFunction("close",&Mysql::close)
-        .endClass();
-        L = l;
-    });
-    return L;
+    // std::string path("script/db/Mysql.lua");
+    // lua_State* L = nullptr;
+    // this->buildSlua(path,[&L](lua_State* l){
+    //     luabridge::getGlobalNamespace(l).beginClass<Mysql>("Mysql")
+    //     .addConstructor<void(*)()>()
+    //     .addFunction("open",&Mysql::open)
+    //     .addFunction("close",&Mysql::close)
+    //     .endClass();
+    //     L = l;
+    // });
+    // return L;
+    return nullptr;
 }
 
 void yedis::LuaFactory::registerMysql(lua_State* l) {
-    luabridge::getGlobalNamespace(l).beginClass<Mysql>("Mysql")
+    luabridge::getGlobalNamespace(l).beginClass<MySqlclient>("Mysql")
         .addConstructor<void(*)()>()
-        .addFunction("open",&Mysql::open)
-        .addFunction("close",&Mysql::close)
-        .addFunction("insert",&Mysql::insert)
+        .addFunction("connect",&MySqlclient::connect)
+        .addFunction("create",&MySqlclient::crateTable)
+        .addFunction("createIndex",&MySqlclient::createIndex)
+        .addFunction("query",&MySqlclient::query)
         .endClass();
 }
