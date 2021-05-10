@@ -1,8 +1,6 @@
 
 #include "TestMyClient.h"
-#include "MySqlclient.h"
-#include <memory>
-#include <string>
+
 
 using namespace std;
 using namespace yedis;
@@ -48,4 +46,11 @@ TEST_F(TestMyClient,test_create_table) {
     c->connect(host,user,pwd,db,port);
     const string create("create table T(ID int primary key, c int);");
     ASSERT_EQ(0,c->crateTable(create));
+}
+
+TEST_F(TestMyClient,test_mysql_lua) {
+    
+    while (true) {
+        sleep(1);
+    }
 }

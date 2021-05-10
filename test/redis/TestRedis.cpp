@@ -35,3 +35,34 @@ TEST_F(TestRedis,test_connect) {
    
    t.join();
 }
+
+
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        
+        std::sort(nums.begin(),nums.end());
+        int n = nums.size();
+        vector<vector<int>> ans;
+
+        for (int j = 0; j < n; j++) {
+            for(int i = j + 1; i < n; i++) {
+                int left = i + 1;
+                int right = n - 1;
+                while (left < right) {
+                    int sum =  nums[left] + nums[right] + nums[i];
+                    if (sum + nums[j] < target) left++;
+                    else  if (sum + nums[j] > target) right--;
+                    else ans.push_back({nums[left],nums[right],nums[i],nums[j]});
+                
+                    while(left < n - 1 && nums[left] == nums[left + 1]) left++;
+                    while(right >= 0 && nums[right] == nums[right - 1]) right--;
+                }
+            }
+        }
+
+        
+
+        return ans;
+    }
+};

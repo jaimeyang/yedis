@@ -110,4 +110,8 @@ TEST_F(TestMysql,test_lua) {
 
     auto v = luabridge::getGlobal(l,"main");
     v();
+
+    while(true) {
+        sleep(1);
+    }
 }
