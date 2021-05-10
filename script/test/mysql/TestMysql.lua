@@ -1,8 +1,8 @@
 
 
-local mysql = require '../../db/Mysql.lua'
+-- local mysql = require '../../db/Mysql.lua'
 
-local user = {
-    ['id'] = mysql.TINYINT,
-    ['']
-}
+-- local user = {
+--     ['id'] = mysql.TINYINT,
+--     ['']
+-- }
