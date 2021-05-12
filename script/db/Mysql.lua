@@ -25,53 +25,49 @@ end
 
 mysql.operator = {}
 
-mysql.create = function(tb) 
+function mysql.operator:create(tb)
+    local sql_str = 'CREATE TABLE IF NOT EXISTS %s (' .. 
+        '%s' .. 
+        'PRIMARY KEY (%s)' ..
+        ') ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s'
     
-    local str = "CREATE TABLE IF NOT EXISTS " .. tb.name .. ' ('
-    for i,v in pairs(tb.column) do
-        str = str .. ' ' .. i .. ' ' .. v .. ','
-    end
-    -- 主键
-    str = str .. ' PRIMARY KEY ('
-    local pri_len = #tb.primary_key
-    for i,v in ipairs(tb.primary_key) do
-        if i < pri_len then
-            str = str .. v .. ', '
-        else            
-            str = str .. v .. ')' .. ''
-        end
-        
-    end
-    str = str .. ')'
-   
-   if tb.default_char_set ~= nil then
-        str = str .. 'DEFAULT CHARSET=' .. tb.default_char_set .. ' '
-
-        if tb.default_collate ~= nil then
-            str = str .. 'COLLATE=' .. tb.default_collate .. ' '
-        end
+    local columns = ''
+    for k,v in pairsByKeys(tb.columns) do
+        columns = columns .. ' ' .. k .. ' ' .. v .. ','
     end
 
-
-    tb.engine = tb.engine == nil and 'INNODB' or tb.engine
-    str = str .. 'ENGINE= ' .. tb.engine .. ';'
+    local pk = ''
+    for k,v in pairsByKeys(tb.primary_keys) do
+        pk = pk .. v .. ','
+    end
+    pk = string.sub(pk,1,-2)
+    if tb.engine == nil then
+        print('egine is nil,default is innodb')
+        tb.engine = 'INNODB'
+    end
     
-    print('create str',str)
-    obj:create(str)
-    -- create index    
-    if tb.indexs ~= nil then
-        local c_index_str = 'CREATE %s INDEX %s ON %s (%s)'
-        for i,v in ipairs(tb.indexs) do
-            print('i',i)
-            v.type = v.type ~= nil and v.type or ''            
-            local sql_str = string.format(c_index_str,v.type,v.name,tb.name,v.cols)
-            print('create index ',sql_str)
-            obj:createIndex(sql_str)
-        end
+    if tb.default_char_set == nil or tb.default_collate == nil then
+        print('default_char_set or default_collate is nil')
+        return
     end
+    sql_str = string.format(sql_str,tb.name,columns,pk,tb.engine,tb.default_char_set,tb.default_collate)
+    print('sql_str:',sql_str)
+    obj:create(sql_str)
+    self:createIndex(tb.name,tb.indexs)
+end
+-- create index   
+function mysql.operator:createIndex(tb_name,tb_index)
+     print('createIndex name \n')
+     local c_index_str = 'CREATE %s INDEX %s ON %s (%s);'
+     for i,v in pairsByKeys(tb_index) do
+         print('i',i)
+         v.type = v.type ~= nil and v.type or ''            
+         local sql_str = string.format(c_index_str,v.type,v.name,tb_name,v.cols)
+         obj:createIndex(sql_str)
+     end
 end
 
-mysql.operator.select = function(operator, ...)
+mysql.operator.select = function(self)
 
     return operator
 end
@@ -80,8 +76,22 @@ mysql.operator.update = function(...)
 
 end
 
-mysql.operator.insert = function()
-
+function mysql.operator:insert(tb)
+    local sql_str = 'INSERT INTO %s (%s) VALUES (%s);'
+    
+    local name = ''
+    local value = ''
+    for k,v in pairsByKeys(tb.columns) do
+        if tb[k] ~= nil then
+            name = name .. k .. ','
+            value = value .. '\'' .. tb[k] .. '\'' .. ','
+        end        
+    end
+    name = string.sub(name,1,-2)
+    value = string.sub(value,1,-2)
+    sql_str = string.format(sql_str,tb.name,name,value)
+    print('insert: ',sql_str)
+    obj:query(sql_str)
 end
 
 mysql.operator.del = function()
